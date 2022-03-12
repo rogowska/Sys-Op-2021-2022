@@ -10,7 +10,7 @@ int main()
     printf("Identyfikator grupy użytkownika: %d\n", getgid());
     printf("Identyfikator procesu: %d\n", getpid());
     printf("Identyfikator procesu macierzystego: %d\n", getppid());
-    printf("Identyfikator grupy procesów: %d\n\n", getpgrp());
+    printf("Identyfikator grupy procesów: %d\n", getpgrp());
 
 return 0;
 }

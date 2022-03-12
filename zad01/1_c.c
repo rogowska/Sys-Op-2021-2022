@@ -10,7 +10,7 @@ int main()
     int i, id;
     char str[30];
 
-     for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
     {
         id = fork();
         if (id > 0)
@@ -32,11 +32,9 @@ int main()
             printf("Proces potomny - Identyfikator procesu: %d\n", getpid());
             printf("Proces potomny - Identyfikator procesu macierzystego: %d\n", getppid());
             printf("Proces potomny - Identyfikator grupy procesów: %d\n\n", getpgrp());
-            if (i == 2)
-            {   
-                sprintf(str, "pstree -p -s %d", getpid());
-                system(str);
-            }
+            /*przygotowanie polecenia pstree dla bieżącego procesu*/
+            sprintf(str, "pstree -p -s %d", getpid());
+            system(str);
         }
         else
         {

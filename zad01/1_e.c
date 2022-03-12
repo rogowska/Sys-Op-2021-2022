@@ -21,11 +21,13 @@ int main()
                 printf("Identyfikator procesu macierzystego: %d\n", getppid());
                 printf("Identyfikator grupy procesów: %d\n\n", getpgrp());
             }
+            /*ustawienie procesu na lidera grupy*/
             setpgid(getpid(), getpid());
             wait(NULL);
         }
         else if (id == 0)
         {
+            /*proces potomny staje się członkiem grupy procesu macierzystego*/
             setpgid(getpid(), getppid());
             printf("Proces potomny - Identyfikator użytkownika: %d\n", getuid());
             printf("Proces potomny - Identyfikator grupy użytkownika: %d\n", getgid());

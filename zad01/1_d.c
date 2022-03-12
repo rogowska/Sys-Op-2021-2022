@@ -21,6 +21,8 @@ int main()
                 printf("Identyfikator procesu macierzystego: %d\n", getppid());
                 printf("Identyfikator grupy procesów: %d\n\n", getpgrp());
             }
+            /*odpowiednia redukcja liczby sekund dla funkcji sleep ze względu na iterację*/
+            /*zapewniamy dłużej(4>3) działający proces rodzica aby nie osierocić procesów potomnych*/
             sleep(4 - i);
         }
         else if (id == 0)
