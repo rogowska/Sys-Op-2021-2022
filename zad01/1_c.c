@@ -1,5 +1,6 @@
 /*oliwia rogowska*/
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -7,8 +8,8 @@
 
 int main()
 {
-    int i, id;
-    char str[30];
+    int i, id, check;
+    char cmd[30], err_str[]="Następujące polecenie nie mogło zostać wykonane: ";
 
     for (i = 0; i < 3; i++)
     {
@@ -33,8 +34,13 @@ int main()
             printf("Proces potomny - Identyfikator procesu macierzystego: %d\n", getppid());
             printf("Proces potomny - Identyfikator grupy procesów: %d\n\n", getpgrp());
             /*przygotowanie polecenia pstree dla bieżącego procesu*/
-            sprintf(str, "pstree -p -s %d", getpid());
-            system(str);
+            sprintf(cmd, "pstree -p -s %d", getpid());
+            check = system(cmd);
+            if (check == -1)
+            {
+                strncat(err_str, cmd, 20);
+                perror(err_str);
+            }
         }
         else
         {

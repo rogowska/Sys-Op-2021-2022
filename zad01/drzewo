@@ -1,3 +1,6 @@
+Odpowiedź na pytanie: Przy n-krotnym wywołaniu funkcji fork powstanie 2^n procesów,
+ponieważ każdy proces będzie tworzył swój proces potomny, a więc przy każdej iteracji
+liczba wszystkich procesów będzie się podwajać.
 
 
                                                                                             
@@ -16,7 +19,6 @@
                       |                |           |                  |                     
                       |                |           |                  |                     
                       |                |           |                  |                     
-                 PID: 27100       PID: 27102    PID: 27101       PID: 27103                 
+                 PID: 27100       PID: 27102    PID: 27101       PID: 27103        
                  PPID: 27098	PPID: 27093    PID: 27099       PPID: 27088                     
                  PGID: 27088      PGID: 27088   PGID: 27088      PGID: 27088
-

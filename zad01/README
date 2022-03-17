@@ -1,0 +1,76 @@
+========================================================================
+Autor: Oliwia Rogowska,                               Krakow, 17.03.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog zad01 zawiera pięć programów w jezyku C:
+--------------------------------------------------------------------
+
+I.  Program wypisujący identyfikatory UID, GID, PID, PPID i PGID 
+    dla własnego procesu.
+    Program sklada sie z jednego modulu: 
+    1) 1_a.c  - program glowny. 
+
+II. Program wywołujący funkcję fork trzy razy w pętli i wypisujący
+identyfikatory dla procesu macierzystego i wszystkich procesów potomnych 
+z użyciem funkcji wait().
+    Program sklada sie z jednego modulu: 
+    1) 1_b.c  - program glowny. 
+
+III.Program wywołujący funkcję fork trzy razy w pętli i wypisujący
+identyfikatory dla procesu macierzystego i wszystkich procesów potomnych
+z użyciem funkcji sleep().
+    Program sklada sie z jednego modulu: 
+    1) 1_c.c  - program glowny.
+
+IV. Program wywołujący funkcję fork trzy razy w pętli i wypisujący
+identyfikatory dla procesu macierzystego i wszystkich procesów potomnych
+z użyciem funkcji sleep() i wyświetlający procesy grupowane pokoleniami.
+    Program sklada sie z jednego modulu: 
+    1) 1_d.c  - program glowny.
+
+V.  Program wywołujący funkcję fork trzy razy w pętli i wypisujący
+identyfikatory dla procesu macierzystego i wszystkich procesów potomnych
+z użyciem funkcji setpig().
+    Program sklada sie z jednego modulu: 
+    1) 1_e.c  - program glowny.
+
+------------------------------------------------------------------------
+
+* Jak uruchomic programy:
+=========================
+
+Katalog zawiera program Makefile do kompilacji,
+i uruchamiania powyzszych programow, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby skompilować programy dotyczące wszystkich zadań należy wykonać komendę:
+	make all
+
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+	make runa
+
+-> Aby uruchomic 2-gi program, nalezy wykonac komende:
+	make runb
+
+-> Aby uruchomic 3-ci program, nalezy wykonac komende:
+	make runc
+
+-> Aby uruchomic 4-ty program, nalezy wykonac komende:
+	make rund
+
+-> Aby uruchomic 5-ty program, nalezy wykonac komende:
+	make rune
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
