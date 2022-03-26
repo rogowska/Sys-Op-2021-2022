@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <errno.h>
 
 int main(int argc, char *argv[])
 {
@@ -21,7 +22,11 @@ int main(int argc, char *argv[])
 
     if (id > 0)
     {
-        sleep(2);
+        while ((kill(id, 0) == -1) || (errno == ESRCH))
+        {
+            errno = ETIME;
+        }
+        sleep(1);
         kill(id, signumber_int);
     }
     else if (id == 0)
