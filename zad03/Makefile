@@ -46,7 +46,7 @@ $(EXEC3): $(OBJS3)
 #############################
 .PHONY: runa
 runa: $(EXEC1)
-	./$(EXEC1) $(EXEX1)
+	./$(EXEC1) $(signumber) $(operation)
 #############################
 .PHONY: runb
 runb: $(EXEC2)
