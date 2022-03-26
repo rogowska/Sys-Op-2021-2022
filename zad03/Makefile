@@ -54,7 +54,7 @@ runb: $(EXEC2)
 #############################
 .PHONY: runc
 runc: $(EXEC3)
-	./$(EXEC3) $(EXEX1)
+	./$(EXEC3)
 #############################
 .PHONY: clean tar
 # Porzadki

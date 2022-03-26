@@ -15,12 +15,12 @@ Do oczekiwania na sygnal uzywa funkcji pause.
     1) zad3_a.c  - program glowny
 Przyjmuje dwa argumenty: numer sygnalu i numer operacji (1-3).
 
-II. Program uruchamajacy zad3_a.c przy uzyciu exec w procesie potomnym innego
-procesu i wysylajacy do niego sygnaly poprzez funkcje systemowe,
-a kill z procesu macierzystego.  
+II. Program uruchamajacy zad3_a.x przy uzyciu exec w procesie potomnym innego
+procesu i wysylajacy do niego sygnaly poprzez funkcje systemowa kill
+z procesu macierzystego.  
     Program sklada sie z jednego modulu:
     1) zad3_b.c - program glowny 
-I korzysta z zad3_a.x. 
+I korzysta z programu zad3_a.x. 
 Przyjmuje dwa argumenty: numer sygnalu i numer operacji (1-3).
 
 III. Program tworzacy w procesie macierzystym proces potomny, ktory staje sie
@@ -32,7 +32,7 @@ wszystkich swoich procesow potomnych i wypisuje ich status zakonczenia
 zwracany przez funkcje wait.
     Program sklada sie z jednego modulu:
     1) zad3_c.c - program glowny 
-I korzysta z zad3_a.x. 
+I korzysta z programu zad3_a.x. 
 Przyjmuje dwa argumenty: numer sygnalu i numer operacji (1-3).
 
 
@@ -64,6 +64,3 @@ i jego archiwizacji.
     make tar
 
 ========================================================================
-
-
-
