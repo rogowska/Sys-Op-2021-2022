@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     
     if (sigaction == 1)
     {
+        printf("Default signalhander will be performed for signal number:%d\n", signumber);
         /* Install a signal handler. */
         if (signal(signumber, SIG_DFL) == SIG_ERR)
         {
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
 
     if (sigaction == 2)
     {
+        printf("Ignoring signal number:%d\n", signumber);
         /* Install a signal handler. */
         if (signal(signumber, SIG_IGN) == SIG_ERR)
         {

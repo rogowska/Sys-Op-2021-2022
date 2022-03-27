@@ -15,8 +15,8 @@ OBJS1 = $(NAME1).o
 EXEC2 = $(NAME2)
 OBJS2 = $(NAME2).o
 #----------------------
-EXEC3 = $(NAME2)
-OBJS3 = $(NAME2).o
+EXEC3 = $(NAME3)
+OBJS3 = $(NAME3).o
 #############################
 COFLAGS = -Wall -O
 LDFLAGS = -Wall -O
@@ -46,19 +46,19 @@ $(EXEC3): $(OBJS3)
 #############################
 .PHONY: runa
 runa: $(EXEC1)
-	./$(EXEC1) $(signumber) $(operation)
+	./$(EXEC1) $(signal) $(action) & pkill $(EXEC1) -$(signal)
 #############################
 .PHONY: runb
-runb: $(EXEC2)
-	./$(EXEC2) $(EXEX1)
+runb: $(EXEC2) $(EXEX1)
+	./$(EXEC2) $(signal) $(action)
 #############################
 .PHONY: runc
-runc: $(EXEC3)
-	./$(EXEC3)
+runc: $(EXEC3) $(EXEX1)
+	./$(EXEC3) $(signal) $(action)
 #############################
-.PHONY: clean tar
+.PHONY: clean
 # Porzadki
-EXECS = $(EXEC1) $(EXEC2) $(EXEC3) 
+EXECS = $(EXEC1) $(EXEX1) $(EXEC2) $(EXEC3)
 clean:                                                     
 	rm -f *.o *.x *~ $(EXECS)
 #=========================================================================

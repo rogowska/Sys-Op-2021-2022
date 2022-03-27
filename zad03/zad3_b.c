@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    int id;
+    pid_t id;
     char *signumber_str = argv[1];
     char *sigaction_str = argv[2];
     int signumber_int = strtol(argv[1], NULL, 0);
@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
         sleep(1);
         /*wysłanie sygnału do procesu potomnego*/
         kill(id, signumber_int);
+        wait(NULL);
     }
     else if (id == 0)
     {
