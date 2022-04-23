@@ -1,0 +1,60 @@
+========================================================================
+Autor: Oliwia Rogowska,                               Krakow, 23.04.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog zad05 zawiera trzy programy w jezyku C:
+--------------------------------------------------------------------
+
+Program przy pomocy potokow nazwanych systemu UNIX przedstawia problem 
+"Producenta i konsumenta”. Dla zademonstrowania, ze nie doszlo do utraty
+ani zwielokrotnienia towaru, Producent pobiera porcje bajtow z pliku tekstowego
+i wstawia go jako towar do potoku, a Konsument umieszcza pobrany z potoku
+towar do pliku przeznaczenia. Po zakonczeniu dzialania programow oba pliki
+sa porownywane komenda: diff. Oba procesy drukuja odpowiednie komunikaty
+na ekranie, w tym towar, ktory przesylaja. Do czytania/pisania danych z/do
+pliku tekstowego, jak rowniez wypisywania ich na ekran uzywa funkcji read i write.
+    Program sklada sie z trzech modulow: 
+    1) zad5a.c  - program glowny, w ktorym uruchamiany jest producent i 
+    konsument za pomoca execlp w procesach potomnych
+    2) konsument.c
+    3) producent.c
+Program mozna uruchomic na dwa sposoby. Pierwszy - z uzyciem programu glownego,
+drugi - poprzez uruchomienie konsumenta i producenta w osobnych terminalach.
+W tym przypadku Makefile tworzy potok nazwany i usuwa go po zakonczeniu 
+dzialania konsumenta.
+ 
+------------------------------------------------------------------------
+
+* Jak uruchomic program:
+=========================
+
+Katalog zawiera program Makefile do kompilacji,
+i uruchamiania powyzszego programu, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby skompilować program dotyczący zadania należy wykonać komendę:
+	make all
+
+-> Aby uruchomic producenta i konsumenta za pomocą programu glownego,
+nalezy wykonac komende:
+	make run_a src=[nazwa pliku zrodlowego] dst=[nazwa pliku docelowego]
+UWAGA: plik zrodlowy powinien znajdowac sie w katalogu biezacym programu.
+
+-> Aby uruchomic samodzielnie producenta i konsumenta w oddzielnych terminalach,
+nalezy wykonac komende:
+	make run_b src=[nazwa pliku zrodlowego] dst=[nazwa pliku docelowego]
+UWAGA: plik zrodlowy powinien znajdowac sie w katalogu biezacym programu.
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+

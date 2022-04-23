@@ -1,0 +1,48 @@
+========================================================================
+Autor: Oliwia Rogowska,                               Krakow, 02.04.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog zad04 zawiera jeden program w jezyku C:
+--------------------------------------------------------------------
+
+Program przy pomocy potokow nienazwanych systemu UNIX przedstawia problem 
+"Producenta i konsumenta”. Dla zademonstrowania, ze nie doszlo do utraty
+ani zwielokrotnienia towaru, Producent pobiera porcje bajtow z file_src.txt
+i wstawia go jako towar do potoku, a Konsument umieszcza pobrany z potoku
+towar w file_dst.txt. Po zakonczeniu dzialania programow oba pliki sa porownywane 
+komenda: diff. Oba procesy drukuja odpowiednie komunikaty na ekranie, w tym towar,
+ktory przesylaja. Do zasymulowania roznych szybkosci dzialania programow uzywa
+funkcji sleep z losowym czasem usypiania. Do czytania/pisania danych
+z/do pliku tekstowego, jak rowniez wypisywania ich na ekran uzywa funkcji read i write.
+    Program sklada sie z jednego modulu: 
+    1) zad4.c  - program glowny. 
+I używa pliku file_src.txt oraz tworzy file_dst.txt.
+
+------------------------------------------------------------------------
+
+* Jak uruchomic program:
+=========================
+
+Katalog zawiera program Makefile do kompilacji,
+i uruchamiania powyzszego programu, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby skompilować program dotyczący zadania należy wykonać komendę:
+	make all
+
+-> Aby uruchomic program, nalezy wykonac komende:
+	make run
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
