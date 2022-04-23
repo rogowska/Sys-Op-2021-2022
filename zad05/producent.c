@@ -38,6 +38,6 @@ int main(int argc, char *argv[])
         }
     } while (bytesread == 5);
 
-    close(fsrcname);
+    close(*fsrcname);
     _exit(EXIT_SUCCESS);
 }
