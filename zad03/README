@@ -6,27 +6,28 @@ Autor: Oliwia Rogowska,                               Krakow, 26.03.2022
 ============
 
 Katalog zad03 zawiera trzy program w jezyku C:
---------------------------------------------------------------------
+-------------------------------------------------------------------------
 
-I. Program do obslugi sygnalow z mozliwosciami: (1) wykonania operacji domy-
-slnej, (2) ignorowania oraz (3) przechwycenia i wlasnej obslugi sygnalu.
+I. Program do obslugi sygnalow z mozliwosciami: 
+    (1) wykonania operacji domyslnej, 
+    (2) ignorowania oraz 
+    (3) przechwycenia i wlasnej obslugi sygnalu.
 Do oczekiwania na sygnal uzywa funkcji pause.
     Program sklada sie z jednego modulu:
     1) zad3_a.c  - program glowny
 Przyjmuje dwa argumenty: numer sygnalu i numer operacji (1-3).
 
-II. Program uruchamajacy zad3_a.x przy uzyciu exec w procesie potomnym innego
-procesu i wysylajacy do niego sygnaly poprzez funkcje systemowa kill
-z procesu macierzystego.  
+II. Program uruchamia zad3_a.x przy uzyciu funkcji exec w procesie potomnym 
+i wysyła do niego sygnaly poprzez funkcje systemowa kill z procesu macierzystego.  
     Program sklada sie z jednego modulu:
     1) zad3_b.c - program glowny 
-I korzysta z programu zad3_a.x. 
+i korzysta z programu zad3_a.x. 
 Przyjmuje dwa argumenty: numer sygnalu i numer operacji (1-3).
 
 III. Program tworzacy w procesie macierzystym proces potomny, ktory staje sie
 liderem nowej grupy procesow. Nastepnie w kilku jego procesach potomnych 
-uruchamiany jest program do obslugi sygnalow. Pierwszy proces macierzysty wysyla sygnaly 
-do calej grupy procesow potomnych po uprzednim sprawdzeniu jej istnienia.
+uruchamiany jest program do obslugi sygnalow. Pierwszy proces macierzysty wysyla 
+sygnaly do calej grupy procesow potomnych po uprzednim sprawdzeniu jej istnienia.
 Proces bedacy liderem grupy procesow ignoruje sygnaly i czeka na zakonczenie
 wszystkich swoich procesow potomnych i wypisuje ich status zakonczenia
 zwracany przez funkcje wait.
@@ -49,13 +50,17 @@ i jego archiwizacji.
 	make all
 
 -> Aby uruchomic 1-szy program, nalezy wykonac komende:
-	make runa [numer sygnalu] [numer operacji]
+	make runa signal=[numer sygnalu] action=[numer operacji]
+
+    Uwaga:  program po uruchomieniu ("&") jest automatycznie testowany przez pkill 
+            - wysłanie sygnału([numer sygnalu])
+            do procesu nazwie odpowiadajacej zadaniu 3.a (zad3_a)   
 
 -> Aby uruchomic 2-gi program, nalezy wykonac komende:
-	make runb [numer sygnalu] [numer operacji]
+	make runb signal=[numer sygnalu] action=[numer operacji] 
 
 -> Aby uruchomic 3-ci program, nalezy wykonac komende:
-	make runc [numer sygnalu] [numer operacji]
+	make runc signal=[numer sygnalu] action=[numer operacji]
 
 -> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
     make clean

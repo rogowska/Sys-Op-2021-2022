@@ -46,7 +46,7 @@ $(EXEC3): $(OBJS3)
 #############################
 .PHONY: runa
 runa: $(EXEC1)
-	./$(EXEC1) $(signal) $(action) & pkill $(EXEC1) -$(signal)
+	./$(EXEC1) $(signal) $(action) & pkill -n $(EXEC1) --signal $(signal)
 #############################
 .PHONY: runb
 runb: $(EXEC2) $(EXEX1)

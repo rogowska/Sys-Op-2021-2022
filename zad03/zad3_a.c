@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+void custom_signalhandler(int sig)
+{
+    printf("Using a custom signalhander for signal number:%d\n", sig);
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -25,11 +30,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    void custom_signalhandler(int sig)
-    {
-        printf("Using a custom signalhander for signal number:%d\n", sig);
-    }
-    
     if (sigaction == 1)
     {
         printf("Default signalhander will be performed for signal number:%d\n", signumber);
