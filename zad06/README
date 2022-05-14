@@ -1,0 +1,49 @@
+========================================================================
+Autor: Oliwia Rogowska,                               Krakow, 07.05.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog zad06 zawiera jeden program w jezyku C:
+--------------------------------------------------------------------
+
+Program przy pomocy semaforow nazwanych standardu POSIX przedstawia problem 
+wzajemnego wykluczania dla procesow. Korzysta z wlasnej biblioteki library.c
+Program glowny powiela procesy za pomoca fork i exec, inicjuje i usuwaja
+semafor w odpowiednich miejscach za pomoca funkcji atexit. W celu weryfikacji
+poprawnosci dzialania programu, w sekcji krytycznej procesow potomnych odbywa sie 
+odczyt, inkrementacja o 1 odczytanej wartosci i ponowny jej zapis do odpowiednio
+wczesniej utworzonego pliku, a na koncu porownanie ostatecznego wyniku z oczekiwanym.
+    Program sklada sie z czterech modulow: 
+    1) duplicator.c  - program glowny, w ktorym uruchamiany jest exclusion.c
+       za pomoca execlp w procesach potomnych
+    2) exclusion.c
+    3) library.c
+    4) library.h
+ 
+------------------------------------------------------------------------
+
+* Jak uruchomic program:
+=========================
+
+Katalog zawiera program Makefile do kompilacji,
+i uruchamiania powyzszego programu, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby skompilować program dotyczący zadania należy wykonać komendę:
+	make all
+
+-> Aby uruchomic program nalezy wykonac komende:
+	make run6 R=exclusion.x PROCNUM=[liczba procesow potomnych] SECTNUM=[liczba sekcji krytycznych]
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+

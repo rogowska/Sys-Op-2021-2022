@@ -6,9 +6,13 @@
 
 void criticalsection(sem_t *my_semaph_address)
 {
+
+    printf("\n    Process %d is executing critical operation\n", getpid());
+
     /*tworzenie zmiennych*/
     int fdesc, value;
-    char buffer[3];
+    char buffer[12];
+    char buffer2[12];
 
     /*otwarcie pliku do czytania*/
     fdesc = open("numer.txt", O_RDONLY, 0666);
@@ -17,16 +21,24 @@ void criticalsection(sem_t *my_semaph_address)
         perror("File opening error\n");
         _exit(EXIT_FAILURE);
     };
-    read(fdesc, buffer, 3);
-    printf("Number read from file: %s\n", buffer);
-    close(fdesc);
+    if (read(fdesc, buffer, 12) < 1)
+    {
+        perror("File read error\n");
+        _exit(EXIT_FAILURE);
+    }
+    printf("Number read from file: %s\n\n", buffer);
+    if (close(fdesc) == -1)
+    {
+        perror("File closing error\n");
+        _exit(EXIT_FAILURE);
+    }
 
     /*konwersja danych z char do int, podniesienie wartości*/
     int number = strtol(buffer, NULL, 0);
     number++;
 
     /*konwersja danych z int do char*/
-    if (sprintf(buffer, "%d", number) < 0)
+    if (sprintf(buffer2, "%d", number) < 0)
     {
         perror("sprintf error");
         _exit(EXIT_FAILURE);
@@ -40,37 +52,44 @@ void criticalsection(sem_t *my_semaph_address)
         perror("File opening error\n");
         _exit(EXIT_FAILURE);
     };
-    write(fdesc, buffer, 3);
-    
+    if (write(fdesc, buffer2, 12) < 1)
+    {
+        perror("File writing error\n");
+        _exit(EXIT_FAILURE);
+    }
+
     /*odczytanie wartości semafora i zamknięcie pliku*/
     value = semaph_getvalue(my_semaph_address);
     printf("Value of semaphore in critial section: %d\n", value);
-    close(fdesc);
+    if (close(fdesc) == -1)
+    {
+        perror("File closing error\n");
+        _exit(EXIT_FAILURE);
+    }
 }
 
 int main(int argc, char *argv[])
 {
     /*sprawdzanie liczby argumentów*/
-    if (argc != 2)
+    if (argc != 3)
     {
         printf("Wrong number of arguments (expected: number of critical sections)\n");
         _exit(EXIT_FAILURE);
     }
 
     /*otwarcie semafora, tworzenie zmiennych*/
-    sem_t *my_semaph_address = semaph_open("my_semaph", 0);
+    char *my_semaph = argv[2];
+    sem_t *my_semaph_address = semaph_open(my_semaph, 0);
     int i, value;
     int critsec_num = strtol(argv[1], NULL, 0);
 
-
     for (i = 0; i < critsec_num; i++)
     {
-        printf("Loop number: %d\n", i + 1);
+        printf("Process %d is looping for the %dth time\n", getpid(), i + 1);
 
         /*odczytywanie wartości semafora i pid procesu*/
         value = semaph_getvalue(my_semaph_address);
         printf("Value of semaphore before critial section: %d\n", value);
-        printf("Process pid: %d\n", getpid());
 
         /*symulowanie działania w częsci wspólnej*/
         sleep(rand() % 5);
