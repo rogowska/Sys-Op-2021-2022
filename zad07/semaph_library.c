@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "library.h"
+#include "semaph_library.h"
 
 sem_t *semaph_init(const char *semaph_name, int oflag, mode_t mode, unsigned int semaph_value)
 {
