@@ -9,6 +9,9 @@
 #include "semaph_library.h"
 #include "shared_memory_library.h"
 
+#define NELE 20
+#define NBUF 10
+
 const char *prod_semaph = "prodSemaph";
 const char *kons_semaph = "konsSemaph";
 const char *my_shm = "memory";
@@ -16,14 +19,28 @@ const char *my_shm = "memory";
 /*utworzenie funkcji obsługiwanych przez atexit*/
 void sphremove()
 {
+    printf("Zad7: sphremove");
     semaph_remove(prod_semaph);
     semaph_remove(kons_semaph);
 }
 
 void shmremove()
 {
-    my_shm_unlink(*my_shm);
+    printf("Zad7: shmremove");
+    my_shm_unlink(my_shm);
 }
+
+/*utworzenie struktury dla PD*/
+
+typedef struct
+{
+    char bufor[NBUF][NELE];
+    int insert;
+    int get;
+} SegmentSHM;
+
+/*utworzenie segmentu do operacji na nim*/
+SegmentSHM SHM;
 
 int main(int argc, char *argv[])
 {
@@ -51,20 +68,41 @@ int main(int argc, char *argv[])
     printf("Konsument semaphore's address: %d\n", kons_semaph_address);
     printf("Konsument semaphore's inital value: %d\n", sem_init_value);
 
-    atexit(sphremove);
-    atexit(shmremove);
-
     /*inicjalizacja pamięci dzielonej*/
     shm_desc = my_shm_create(my_shm);
+    my_ftruncate(shm_desc, sizeof(SHM));
     printf("Shared memory address:%d\n", shm_desc);
+    printf("Zad7: Shared memory size:%d\n", sizeof(SHM));
 
     id = fork();
 
     if (id > 0)
     {
+        if (signal(SIGINT, sphremove) == SIG_ERR)
+        {
+            perror("signal error");
+            exit(EXIT_FAILURE);
+        }
+
+        if (signal(SIGINT, shmremove) == SIG_ERR)
+        {
+            perror("signal error");
+            exit(EXIT_FAILURE);
+        }
         id2 = fork();
         if (id2 > 0)
         {
+            if (signal(SIGINT, sphremove) == SIG_ERR)
+            {
+                perror("signal error");
+                exit(EXIT_FAILURE);
+            }
+
+            if (signal(SIGINT, shmremove) == SIG_ERR)
+            {
+                perror("signal error");
+                exit(EXIT_FAILURE);
+            }
             wait(NULL);
         }
         else if (id2 == 0)
@@ -90,8 +128,21 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    if (signal(SIGINT, sphremove) == SIG_ERR)
+    {
+        perror("signal error");
+        exit(EXIT_FAILURE);
+    }
+
+    if (signal(SIGINT, shmremove) == SIG_ERR)
+    {
+        perror("signal error");
+        exit(EXIT_FAILURE);
+    }
     atexit(sphremove);
     atexit(shmremove);
+
+    printf("Zad7: End - exiting\n");
 
     exit(EXIT_SUCCESS);
 }

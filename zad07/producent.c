@@ -49,7 +49,11 @@ int main(int argc, char *argv[])
     sem_t *kons_semaph_address = semaph_open(kons_semaph, 0);
     printf("Konsument semaphore's address: %d\n", kons_semaph_address);
     shmdesc = my_shm_open(shm_name);
+
+
     SegmentSHM *SHM = (SegmentSHM *)my_mmap(sizeof(SegmentSHM), shmdesc);
+
+    printf("Producent: Shared memory size:%d\n", sizeof(SegmentSHM));
     printf("Shared memory address:%d\n", shmdesc);
 
     SHM->insert=0;
@@ -63,8 +67,8 @@ int main(int argc, char *argv[])
         /*wypisywanie wartosci semaforow*/
         prodsemvalue = semaph_getvalue(prod_semaph_address);
         konssemvalue = semaph_getvalue(kons_semaph_address);
-        printf("Producent semaphore value: %d\n", prodsemvalue);
-        printf("Konsument semaphore value: %d\n", konssemvalue);
+        printf("\nProducent semaphore value: %d\n", prodsemvalue);
+        printf("\nKonsument semaphore value: %d\n", konssemvalue);
 
         /*czytanie z pliku do pamięci dzielonej*/
         bytesread = read(fsrc, SHM->bufor[SHM->insert], NELE);

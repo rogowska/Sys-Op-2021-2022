@@ -49,10 +49,13 @@ int main(int argc, char *argv[])
     sem_t *kons_semaph_address = semaph_open(kons_semaph, 0);
     printf("Konsument semaphore's address: %d\n", kons_semaph_address);
     shmdesc = my_shm_open(shm_name);
+
     SegmentSHM *SHM = (SegmentSHM *)my_mmap(sizeof(SegmentSHM), shmdesc);
+
+    printf("Konsument: Shared memory size:%d\n", sizeof(SegmentSHM));
     printf("Shared memory address:%d\n", shmdesc);
 
-    SHM->get=0;
+    SHM->get = 0;
 
     /*zapisywanie wyprodukowanych produktów z pamieci dzielonej do pliku*/
     do
@@ -63,8 +66,8 @@ int main(int argc, char *argv[])
         /*wypisywanie wartosci semaforow*/
         prodsemvalue = semaph_getvalue(prod_semaph_address);
         konssemvalue = semaph_getvalue(kons_semaph_address);
-        printf("Producent semaphore value: %d\n", prodsemvalue);
-        printf("Konsument semaphore value: %d\n", konssemvalue);
+        printf("\nProducent semaphore value: %d\n", prodsemvalue);
+        printf("\nKonsument semaphore value: %d\n", konssemvalue);
 
         /*czytanie z pliku do pamięci dzielonej*/
         bytesread = write(fdst, SHM->bufor[SHM->get], NELE);
@@ -85,7 +88,7 @@ int main(int argc, char *argv[])
         }
 
         /*zwiększenie indeksu*/
-        SHM->get= (SHM->get + 1) % NBUF;
+        SHM->get = (SHM->get + 1) % NBUF;
 
         /*podniesienie semafora producenta*/
         semaph_wait(prod_semaph_address);
@@ -101,6 +104,8 @@ int main(int argc, char *argv[])
     semaph_close(prod_semaph_address);
     semaph_close(kons_semaph_address);
     my_close(shmdesc);
+
+    printf("Konsument: End - exiting\n");
 
     _exit(EXIT_SUCCESS);
 }
