@@ -18,6 +18,20 @@ typedef struct
     int get;
 } SegmentSHM;
 
+int ifzero(SegmentSHM SHM, int bufornumber, int* endposition)
+{
+    int i;
+    for (i = 0; i < NELE; i++)
+    {
+        if (SHM.bufor[bufornumber][i] == '\0')
+        {
+            *endposition = i;
+            return 0;
+        }
+    }
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -33,7 +47,7 @@ int main(int argc, char *argv[])
     char *kons_semaph = argv[2];
     char *shm_name = argv[3];
     char *destfile = argv[4];
-    int prodsemvalue, konssemvalue, fdst, bytesread, shmdesc;
+    int prodsemvalue, konssemvalue, fdst, bytesread, shmdesc, endposition;
 
     /*otwarcie pliku do zapisu*/
     fdst = open(destfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
@@ -66,21 +80,33 @@ int main(int argc, char *argv[])
         /*wypisywanie wartosci semaforow*/
         prodsemvalue = semaph_getvalue(prod_semaph_address);
         konssemvalue = semaph_getvalue(kons_semaph_address);
-        printf("\nProducent semaphore value: %d\n", prodsemvalue);
-        printf("\nKonsument semaphore value: %d\n", konssemvalue);
+        printf("\n\nProducent semaphore value: %d\n", prodsemvalue);
+        printf("\n\nKonsument semaphore value: %d\n", konssemvalue);
 
         /*czytanie z pliku do pamięci dzielonej*/
-        bytesread = write(fdst, SHM->bufor[SHM->get], NELE);
-        if (bytesread == -1)
+        if (ifzero(*SHM, SHM->get, &endposition) == 0)
         {
-            perror("read error\n");
-            _exit(EXIT_FAILURE);
-        };
+            bytesread = write(fdst, SHM->bufor[SHM->get], endposition);
+            if (bytesread == -1)
+            {
+                perror("read error\n");
+                _exit(EXIT_FAILURE);
+            };
+        }
+        else
+        {
+            bytesread = write(fdst, SHM->bufor[SHM->get], NELE);
+            if (bytesread == -1)
+            {
+                perror("read error\n");
+                _exit(EXIT_FAILURE);
+            }
+        }
 
         /*wypisanie towaru na ekran*/
         printf("Current bufor element index in konsument process: %d\n", SHM->get);
         printf("Bytes read: %d\n", bytesread);
-        printf("Text recieved:\n\n");
+        printf("Text recieved:");
         if (-1 == write(STDOUT_FILENO, SHM->bufor[SHM->get], bytesread))
         {
             perror("write error\n");
@@ -93,7 +119,7 @@ int main(int argc, char *argv[])
         /*podniesienie semafora producenta*/
         semaph_wait(prod_semaph_address);
 
-    } while (bytesread == NELE);
+    } while (ifzero(*SHM, SHM->get - 1, &endposition));
 
     /* zamykanie pliku, semaforów i pamięci dzielonej */
     if (close(fdst) == -1)

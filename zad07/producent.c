@@ -14,7 +14,7 @@
 typedef struct
 {
     char bufor[NBUF][NELE];
-    int insert; 
+    int insert;
     int get;
 } SegmentSHM;
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     fsrc = open(sourcefile, O_RDONLY, 0666);
     if (fsrc == -1)
     {
-        perror("Open error\n");
+        perror("Open error");
         exit(-1);
     }
 
@@ -50,13 +50,12 @@ int main(int argc, char *argv[])
     printf("Konsument semaphore's address: %d\n", kons_semaph_address);
     shmdesc = my_shm_open(shm_name);
 
-
     SegmentSHM *SHM = (SegmentSHM *)my_mmap(sizeof(SegmentSHM), shmdesc);
 
     printf("Producent: Shared memory size:%d\n", sizeof(SegmentSHM));
     printf("Shared memory address:%d\n", shmdesc);
 
-    SHM->insert=0;
+    SHM->insert = 0;
 
     /*zapisywanie wyprodukowanych produktów do pamięci dzielonej*/
     do
@@ -67,8 +66,8 @@ int main(int argc, char *argv[])
         /*wypisywanie wartosci semaforow*/
         prodsemvalue = semaph_getvalue(prod_semaph_address);
         konssemvalue = semaph_getvalue(kons_semaph_address);
-        printf("\nProducent semaphore value: %d\n", prodsemvalue);
-        printf("\nKonsument semaphore value: %d\n", konssemvalue);
+        printf("\n\nProducent semaphore value: %d\n", prodsemvalue);
+        printf("\n\nKonsument semaphore value: %d\n", konssemvalue);
 
         /*czytanie z pliku do pamięci dzielonej*/
         bytesread = read(fsrc, SHM->bufor[SHM->insert], NELE);
@@ -76,20 +75,24 @@ int main(int argc, char *argv[])
         {
             perror("read error\n");
             _exit(EXIT_FAILURE);
-        };
+        }
+        if (bytesread < NELE)
+        {
+            SHM->bufor[SHM->insert][bytesread] = '\0';
+        }
 
         /*wypisanie towaru na ekran*/
         printf("Current bufor element index in producent process: %d\n", SHM->insert);
         printf("Bytes read: %d\n", bytesread);
-        printf("Text produced:\n\n");
-        if (-1 ==write(STDOUT_FILENO, SHM->bufor[SHM->insert], bytesread))
+        printf("Text produced:");
+        if (-1 == write(STDOUT_FILENO, SHM->bufor[SHM->insert], bytesread))
         {
             perror("write error\n");
             _exit(EXIT_FAILURE);
         }
-        
+
         /*zwiększenie indeksu*/
-        SHM->insert=(SHM->insert+1)%NBUF;
+        SHM->insert = (SHM->insert + 1) % NBUF;
 
         /*podniesienie semafora konsumenta*/
         semaph_wait(kons_semaph_address);
@@ -105,6 +108,8 @@ int main(int argc, char *argv[])
     semaph_close(prod_semaph_address);
     semaph_close(kons_semaph_address);
     my_close(shmdesc);
+
+    printf("Producent: End - exiting\n");
 
     _exit(EXIT_SUCCESS);
 }

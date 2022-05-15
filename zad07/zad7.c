@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <wait.h>
+#include <signal.h>
 #include "semaph_library.h"
 #include "shared_memory_library.h"
 
