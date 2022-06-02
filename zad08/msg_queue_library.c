@@ -5,49 +5,46 @@
 #include <stdlib.h>
 #include "msg_queue_library.h"
 
-mqd_t msq_open_readonly(name)
+mqd_t msq_open_readonly(const char *name)
 {
     mqd_t desc;
     desc = mq_open(name, O_RDONLY);
     if (desc == -1)
     {
-        perror("mq_open error");
+        perror("mq_open_readonly error");
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
     return desc;
-};
+}
 
-
-mqd_t msq_open_writeonly(name)
+mqd_t msq_open_writeonly(const char *name)
 {
     mqd_t desc;
     desc = mq_open(name, O_WRONLY);
     if (desc == -1)
     {
-        perror("mq_open error");
+        perror("mq_open_writeonly error");
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
     return desc;
-};
+}
 
-
-mqd_t msq_create(name)
+mqd_t msq_create(const char *name)
 {
     mqd_t desc;
-    desc = mq_open(name, O_CREAT | O_EXCL, 0666, NULL);
+    desc = mq_open(name, O_CREAT | O_EXCL | O_RDWR, 0666, NULL);
     if (desc == -1)
     {
-        perror("mq_open error");
+        perror("mq_open_creating error");
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
     return desc;
-};
+}
 
-
-void msq_close(desc)
+void msq_close(mqd_t desc)
 {
     if (mq_close(desc) == -1)
     {
@@ -55,10 +52,9 @@ void msq_close(desc)
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
-};
+}
 
-
-void msq_unlink(name)
+void msq_unlink(const char *name)
 {
     if (mq_unlink(name) == -1)
     {
@@ -66,10 +62,9 @@ void msq_unlink(name)
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
-};
+}
 
-
-void msq_send(desc, msg, prio)
+void msq_send(mqd_t desc, const char *msg, int prio)
 {
     int val;
     val = mq_send(desc, msg, sizeof(msg), prio);
@@ -79,35 +74,33 @@ void msq_send(desc, msg, prio)
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
-};
+}
 
-
-void msq_recieve(desc, buff)
+void msq_receive(mqd_t desc, char *buff)
 {
     int val;
-    val = mq_recieve(desc, buff, sizeof(buff), NULL);
+    val = mq_receive(desc, buff, sizeof(buff), NULL);
     if (val == -1)
     {
         perror("mq_recieve error");
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
-};
+}
 
-
-void msq_getattr(desc, attr)
+void msq_getattr(mqd_t desc, struct mq_attr *attr)
 {
     int val;
-    val = mq_getattr(desc, attr)
+    val = mq_getattr(desc, attr);
+    if(val ==-1)
     {
         perror("mq_getattr error");
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
-};
+}
 
-
-void msq_setattr(desc, newattr, oldattr)
+void msq_setattr(mqd_t desc, struct mq_attr *newattr, struct mq_attr *oldattr)
 {
     int val;
     val = mq_setattr(desc, newattr, oldattr);
@@ -117,4 +110,4 @@ void msq_setattr(desc, newattr, oldattr)
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
-};
+}

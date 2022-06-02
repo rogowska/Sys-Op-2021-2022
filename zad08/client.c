@@ -6,11 +6,9 @@
 #include <unistd.h>
 #include "msg_queue_library.h"
 
-extern serverQueue;
-
 /*tworzenie funkcji rejestrowanych przez atexit*/
 
-void sQueueClose()
+/*void sQueueClose()
 {
     msq_close(serverDesc);
 }
@@ -19,7 +17,7 @@ void cQueueClose()
 {
     msq_unlink(cName);
     msq_close(clientDesc);
-}
+}*/
 
 int main()
 {
@@ -27,28 +25,31 @@ int main()
     /*definiowanie zmiennych*/
     int pid;
     mqd_t serverDesc, clientDesc;
-    char msgRecieved[60];
+    char msgReceived[60];
 
     /*odczytywanie pid procesu kilenta*/
-    char cName[10] = "/";
+    char cName[10];
     pid = getpid();
-    sprintf(cName, pid);
+    sprintf(cName, "/");
+    sprintf(cName, "%d", pid);
 
     /*otwieranie kolejek dla klienta i serwera*/
+    clientDesc = msq_create(cName);
     clientDesc = msq_open_readonly(cName);
-    serverDesc = msq_open_writeonly(serverQueue);
+    serverDesc = msq_open_writeonly(SERVERQUEUE);
 
     /*wysyłanie komunikatów do serwera*/
     while (!EOF)
     {
-        char *str[50] = "/";
-        char *strRead[60];
-        sprintf(str, pid);
+        char str[70];
+        char strRead[60];
+        sprintf(str, "/");
+        sprintf(str, "%d", pid);
         fgets(strRead, sizeof(strRead), STDIN_FILENO);
-        sprintf(str, strRead);
+        sprintf(str, "%s", strRead);
         msq_send(serverDesc, str, 0);
         /*odczytanie komunikatu z serwera*/
-        msq_recieve(clientDesc, msgRecieved);
+        msq_receive(clientDesc, msgReceived);
         /*wypisanie komunikatu na konsolę*/
         if (-1 == write(STDOUT_FILENO, strRead, sizeof(strRead)))
         {
@@ -57,8 +58,12 @@ int main()
         }
     }
 
-    atexit(sQueueClose);
-    atexit(cQueueClose);
+
+    msq_close(serverDesc);
+    msq_unlink(cName);
+    msq_close(clientDesc);
+    /*atexit(sQueueClose);
+    atexit(cQueueClose);*/
     printf("Client process exiting...\n");
     exit(EXIT_SUCCESS);
 }
