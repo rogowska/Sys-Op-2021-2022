@@ -32,13 +32,14 @@ mqd_t msq_open_writeonly(const char *name)
     return desc;
 }
 
-mqd_t msq_create(const char *name)
+mqd_t msq_create(const char *name, struct mq_attr *newattr)
 {
     mqd_t desc;
-    desc = mq_open(name, O_CREAT | O_EXCL | O_RDWR, 0666, NULL);
+    desc = mq_open(name, O_CREAT | O_EXCL | O_RDWR, 0666, newattr);
     if (desc == -1)
     {
         perror("mq_open_creating error");
+        printf("%s\n", name);
         printf("Exiting...\n");
         exit(EXIT_FAILURE);
     }
@@ -65,10 +66,11 @@ void msq_unlink(const char *name)
     }
 }
 
-void msq_send(mqd_t desc, const char *msg, int prio)
+void msq_send(mqd_t desc, const char *msg, int buffsize, int prio)
 {
     int val;
-    val = mq_send(desc, msg, sizeof(msg), prio);
+    printf("%s\n", msg);
+    val = mq_send(desc, msg, buffsize, prio);
     if (val == -1)
     {
         perror("mq_send error");
@@ -77,10 +79,10 @@ void msq_send(mqd_t desc, const char *msg, int prio)
     }
 }
 
-void msq_receive(mqd_t desc, char *buff)
+void msq_receive(mqd_t desc, char *buff, int buffsize)
 {
     int val;
-    val = mq_receive(desc, buff, sizeof(buff), NULL);
+    val = mq_receive(desc, buff, buffsize, NULL);
     if (val == -1)
     {
         perror("mq_recieve error");
