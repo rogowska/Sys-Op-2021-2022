@@ -69,7 +69,6 @@ void msq_unlink(const char *name)
 void msq_send(mqd_t desc, const char *msg, int buffsize, int prio)
 {
     int val;
-    printf("%s\n", msg);
     val = mq_send(desc, msg, buffsize, prio);
     if (val == -1)
     {

@@ -9,31 +9,32 @@
 
 mqd_t serverDesc, clientDesc;
 
+/*funkcje dla atexit i signal*/
 void sQueueClose()
 {
-    printf("sQueueClose przed\n");
-    msq_unlink(SERVERQUEUE);
+    printf("server queue closing...\n");
     msq_close(serverDesc);
-    printf("sQueueClose po\n");
+    msq_unlink(SERVERQUEUE);
 }
 
 void cQueueClose()
 {
-    printf("cQueueClose przed\n");
+    printf("client queue closing...\n");
     msq_close(clientDesc);
-    printf("cQueueClose po\n");
 }
 
 void exit_signal(int signal)
 {
-    printf("\nSygnał przerwania, zamykanie kolejki\n");
+    printf("\nExit signal, queue closing\n");
     atexit(sQueueClose);
     atexit(cQueueClose);
+    printf("Server process exiting...\n");
     exit(EXIT_SUCCESS);
 }
 
 int main()
 {
+    /*obsługa sygnału*/
     if (signal(SIGINT, exit_signal) == SIG_ERR)
     {
         perror("Signal error:");
@@ -48,6 +49,7 @@ int main()
     char operator;
     char cName[10];
 
+    /*ustawianie atrybutów*/
     struct mq_attr newattr;
     newattr.mq_flags = 0;
     newattr.mq_maxmsg = 10;
@@ -58,8 +60,9 @@ int main()
     serverDesc = msq_create(SERVERQUEUE, &newattr);
     serverDesc = msq_open_readonly(SERVERQUEUE);
 
+    /*wypisywanie atrybutów kolejki na konsoli*/
     msq_getattr(serverDesc, &atributes);
-    printf("Utworzono kolejkę \"%s\" o atrybutach:\n", SERVERQUEUE);
+    printf("Created a queue \"%s\" which has descriptor \"%d\" and atributes:\n", SERVERQUEUE, serverDesc);
     printf("mq_flags: = %ld\n", atributes.mq_flags);
     printf("mq_maxmsg: = %ld\n", atributes.mq_maxmsg);
     printf("mq_msgsize: = %ld\n", atributes.mq_msgsize);
@@ -68,40 +71,40 @@ int main()
     while (1)
     {
         /*odczytywanie wiadomości i pidu procesu klienta*/
-        printf("Jestem przed msq_receive\n");
+        printf("Waiting for message...\n");
         msq_receive(serverDesc, msgReceived, MSGLENGTH);
-        printf("%s\n", msgReceived);
+        printf("Message received: %s\n", msgReceived);
         sleep(rand() % 10);
         sscanf(msgReceived, "%d %d%c%d", &pid, &num1, &operator, & num2);
         sprintf(cName, "/%d", pid);
         printf("%d %d %c %d\n", pid, num1, operator, num2);
 
         /*otwieranie kolejki procesu klienta*/
-        printf("Otwieranie kolejki klienta\n");
+        printf("Client queue opening\n");
         clientDesc = msq_open_writeonly(cName);
 
         /*obliczanie wyniku*/
         if (operator== '+')
         {
-            printf("wykonywanie operacji +\n");
+            printf("calculating %d + %d\n", num1, num2);
             result = num1 + num2;
             sprintf(msgSent, "%d", result);
         }
         else if (operator== '-')
         {
-            printf("wykonywanie operacji -\n");
+            printf("calculating %d - %d\n", num1, num2);
             result = num1 - num2;
             sprintf(msgSent, "%d", result);
         }
         else if (operator== '*')
         {
-            printf("wykonywanie operacji *\n");
+            printf("calculating %d * %d\n", num1, num2);
             result = num1 * num2;
             sprintf(msgSent, "%d", result);
         }
         else if (operator== '/')
         {
-            printf("wykonywanie operacji /\n");
+            printf("calculating %d / %d\n", num1, num2);
             result = num1 / num2;
             sprintf(msgSent, "%d", result);
         }
@@ -110,8 +113,8 @@ int main()
             sprintf(msgSent, "Error: unknown operator\n");
         }
 
-        /*wysyłanie wiadomości i zamykanie kolejki*/
-        printf("Odsyłanie odpowiedzi do klienta\n");
+        /*wysyłanie wiadomości i zamykanie kolejki klienta*/
+        printf("Sending answer to client queue\n");
         msq_send(clientDesc, msgSent, MSGLENGTH, 0);
         msq_close(clientDesc);
     }

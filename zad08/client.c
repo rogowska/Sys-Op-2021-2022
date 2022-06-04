@@ -14,28 +14,27 @@ char cName[10];
 
 void sQueueClose()
 {
-    printf("sQueueClose przed\n");
+    printf("server queue closing...\n");
     msq_close(serverDesc);
-    printf("sQueueClose po\n");
 }
 
 void cQueueClose()
 {
-    printf("cQueueClose przed\n");
-    msq_unlink(cName);
+    printf("client queue closing...\n");
     msq_close(clientDesc);
-    printf("cQueueClose po\n");
+    msq_unlink(cName);
 }
 
 void exit_signal(int signal)
 {
-    printf("\nSygnał przerwania, zamykanie kolejki\n");
+    printf("\nExit signal, queue closing\n");
+    printf("Server process exiting...\n");
     exit(EXIT_SUCCESS);
 }
 
 int main()
 {
-
+    /*obsługa sygnału*/
     if (signal(SIGINT, exit_signal) == SIG_ERR)
     {
         perror("Signal error:");
@@ -47,6 +46,7 @@ int main()
 
     /*definiowanie zmiennych*/
     int pid;
+    struct mq_attr atributes;
     char msgReceived[60];
     char str[70];
     char strRead[60];
@@ -66,20 +66,28 @@ int main()
     clientDesc = msq_open_readonly(cName);
     serverDesc = msq_open_writeonly(SERVERQUEUE);
 
+    /*ustawianie atrybutów*/
+    msq_getattr(clientDesc, &atributes);
+    printf("Created a queue \"%s\" which has descriptor \"%d\" and atributes:\n", SERVERQUEUE, clientDesc);
+    printf("mq_flags: = %ld\n", atributes.mq_flags);
+    printf("mq_maxmsg: = %ld\n", atributes.mq_maxmsg);
+    printf("mq_msgsize: = %ld\n", atributes.mq_msgsize);
+    printf("mq_curmsgs: = %ld\n\n", atributes.mq_curmsgs);
+
+    printf("Waiting for new message\n");
     /*wysyłanie komunikatów do serwera*/
     while (fgets(strRead, sizeof(strRead), stdin) != NULL)
     {
-        printf("Jestem w petli\n");
         sprintf(str, "%d %s", pid, strRead);
         printf("%s\n", str);
-        sleep(rand()%10);
+        sleep(rand() % 10);
         msq_send(serverDesc, str, MSGLENGTH, 0);
-        printf("Pytanie wysłane do serwera\n");
+        printf("Message sent to server\n");
         /*odczytanie komunikatu z serwera*/
         msq_receive(clientDesc, msgReceived, MSGLENGTH);
         /*wypisanie komunikatu na konsolę*/
-        printf("Otrzymana odpowiedź: %s\n", msgReceived);
-        printf("\n");
+        printf("Answer received: %s\n", msgReceived);
+        printf("\nWaiting for new message\n");
     }
 
     printf("Client process exiting...\n");
