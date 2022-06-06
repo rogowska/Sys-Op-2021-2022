@@ -55,6 +55,7 @@ int main()
     pid = getpid();
     sprintf(cName, "/%d", pid);
 
+    /*ustawianie atrybutów*/
     struct mq_attr newattr;
     newattr.mq_flags = 0;
     newattr.mq_maxmsg = 10;
@@ -66,7 +67,7 @@ int main()
     clientDesc = msq_open_readonly(cName);
     serverDesc = msq_open_writeonly(SERVERQUEUE);
 
-    /*ustawianie atrybutów*/
+    /*wyświetlanie atrybutów na konsoli*/
     msq_getattr(clientDesc, &atributes);
     printf("Created a queue \"%s\" which has descriptor \"%d\" and atributes:\n", SERVERQUEUE, clientDesc);
     printf("mq_flags: = %ld\n", atributes.mq_flags);

@@ -1,4 +1,4 @@
-/*https://github.com/Kimel-PK/Systemy_Operacyjne_2020-2021/blob/master/%C4%86wiczenie%208/kolejki.c*/
+
 #include <fcntl.h>
 #include <mqueue.h>
 #include <sys/stat.h>
