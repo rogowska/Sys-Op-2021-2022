@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     if (argc != 3)
     {
         printf("Wrong number of arguments, expected: threads number and number of repetitions\n");
-            printf("Exiting...");
+        printf("Exiting...");
         exit(1);
     }
 
@@ -97,7 +97,8 @@ int main(int argc, char *argv[])
     }
 
     /*tworzenie mutexu zainicjowanego na 0*/
-    if(pthread_mutex_init(&myMutex, NULL)!=0){
+    if (pthread_mutex_init(&myMutex, NULL) != 0)
+    {
         printf("pthread_mutex_init error, exiting...\n");
         exit(1);
     }
@@ -109,8 +110,9 @@ int main(int argc, char *argv[])
     for (i = 0; i < threads_number; i++)
     {
         /*rzutowanie int na void i przekazywanie wskaźnika do wątku*/
-        void *pointer = &i;
-        if (pthread_create(&thread_array[i], NULL, thread_function, pointer) != 0)
+        int *memory = malloc(sizeof(int));
+        *memory = i;
+        if (pthread_create(&thread_array[i], NULL, thread_function, (void *)memory) != 0)
         {
             printf("pthread_create error\n");
             printf("Exiting...\n");
