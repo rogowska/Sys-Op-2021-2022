@@ -1,0 +1,54 @@
+========================================================================
+Autor: Oliwia Rogowska,                               Krakow, 06.06.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog zad09 zawiera jeden program w jezyku C:
+------------------------------------------------------------------------
+Przy pomocy muteksow zaimplementowano zadanie wzajemnego wykluczania dla
+watkow. Do demonstracji dzialania programu uzyto sekwencji sterujacych konsoli.
+Watek wykonujac swoja sekcje prywatna wypisuje odpowiedni komunikat
+po lewej stronie okna konsoli, natomiast bedac w sekcji krytycznej drukuje
+informacje po prawej stronie (w tym samym wierszu).
+Kazdy watek moze kilka razy powtarzac powyzszy cykl. 
+Po prawej stronie okna konsoli w danym momencie zglasza ́sie co najwyzej 
+jeden watek, pozostale natomiast zglaszaja sie po lewej stronie.
+Do zademonstrowania operacji na zasobie dzielonym uzyto globalnej
+zmiennej licznikowej, zainicjowanej wartoscia 0. Kazdy z watkow na poczatku
+sekcji krytycznej przypisuje jej wartosc swojemu prywatnemu licznikowi,
+nastepnie zwieksza wartosc tego prywatnego licznika o 1, a po pewnym czasie
+przypisuje jego wartosc wspolnemu licznikowi. Na koncu program sprawdza,
+czy po zakonczeniu dzialania wszystkich watkow wartosc wspolnego licznika
+jest zgodna z oczekiwanym.
+    Program sklada sie z jednego modulu: 
+    1) threads.c
+Przy uruchomieniu programu należy podać dwa argumenty -liczbę wątków i liczbę
+przejść po pętli.
+ 
+------------------------------------------------------------------------
+
+* Jak uruchomic program:
+=========================
+
+Katalog zawiera program Makefile do kompilacji,
+i uruchamiania powyzszego programu, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby skompilować program dotyczący zadania należy wykonać komendę:
+	make all
+
+-> Aby uruchomić program, nalezy wykonac komende:
+	make run threads_num=[liczba wątków] loop_num=[liczba pętli]
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
