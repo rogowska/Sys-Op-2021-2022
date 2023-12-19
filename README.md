@@ -6,6 +6,6 @@
 ### 4. Potoki nienazwane - problem "Producenta i konsumenta"
 ### 5. Potoki nazwane - problem "Producenta i konsumenta" 
 ### 6. Semafory nazwane -problem wzajemnego wykluczania dla procesów
-### 7. ---
+### 7. Pamięć dzielona
 ### 8. Kolejki komunikatów - zadanie typu klient-serwer
 ### 9. Muteksy - problem wzajemnego wykluczania dla wątków
